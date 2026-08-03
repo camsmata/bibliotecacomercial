@@ -1,6 +1,1081 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Comercial - Microsistec</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#0A2540',
+                            secondary: '#00D4FF',
+                            accent: '#F59E0B',
+                            bg: '#F8FAFC',
+                            text: '#1E293B',
+        }
+      },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'
+        ],
+      }
+    }
+  }
 }
+    </script>
+    <style>
+        * { font-family: 'Inter', sans-serif;
+}
+        .fade-in { animation: fadeIn 0.3s ease-in;
+}
+        @keyframes fadeIn { from { opacity: 0;
+  } to { opacity: 1;
+  }
+}
+    </style>
+</head>
+<body class="bg-brand-bg text-brand-text">
+    <div id="app"></div>
+
+    <script>
+        // ============================================
+// BANCO DE DADOS LOCAL (localStorage)
+// ============================================
+        const DB = {
+            init() {
+                if (!localStorage.getItem('users')) {
+                    localStorage.setItem('users', JSON.stringify([
+        { email: 'cami@microsistec.com', password: 'admin123', role: 'admin', name: 'Cami'
+        }
+      ]));
+    }
+                if (!localStorage.getItem('contents')) {
+                    localStorage.setItem('contents', JSON.stringify(this.getDefaultContents()));
+    }
+  },
+            getUsers() { return JSON.parse(localStorage.getItem('users') || '[]');
+  },
+            getContents() { return JSON.parse(localStorage.getItem('contents') || '[]');
+  },
+            saveUsers(users) { localStorage.setItem('users', JSON.stringify(users));
+  },
+            saveContents(contents) { localStorage.setItem('contents', JSON.stringify(contents));
+  },
+            getCurrentUser() { return JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+  },
+            setCurrentUser(user) { sessionStorage.setItem('currentUser', JSON.stringify(user));
+  },
+            logout() { sessionStorage.removeItem('currentUser');
+  },
+            
+            getDefaultContents() {
+                return [
+      {
+                        id: 1,
+                        title: 'Missão do Comercial',
+                        category: 'Missão e Posicionamento',
+                        content: `Estruturar uma operação comercial previsível, escalável e orientada por dados, aumentando a receita recorrente por meio da padronização dos processos, da evolução contínua da equipe e da melhoria das taxas de conversão e retenção.
+
+1. Crescimento de Receita
+• Aumentar o MRR de Cross Sell.
+• Aumentar o ticket médio.
+• Aumentar a quantidade de vendas mensais.
+• Identificar novas oportunidades de Upsell.
+
+2. Excelência Operacional
+• Padronizar processos.
+• Documentar o playbook comercial.
+• Criar fluxos claros para todas as etapas da venda.
+• Reduzir retrabalho e dependência de conhecimento individual.
+
+3. Performance Comercial
+• Melhorar a conversão em cada etapa do funil.
+• Aumentar a taxa de comparecimento às reuniões (Show Rate).
+• Reduzir o ciclo de vendas.
+• Melhorar a qualidade das oportunidades trabalhadas.
+
+4. Gestão por Indicadores
+Definir e acompanhar indicadores como:
+• MRR gerado.
+• Conversão por etapa.
+• Reuniões agendadas e realizadas.
+• Taxa de fechamento.
+• Ticket médio.
+• Receita por closer e por produto.
+• Tempo médio até o fechamento.
+
+5. Desenvolvimento da Equipe
+• Criar rotina de feedback.
+• Desenvolver treinamentos.
+• Padronizar discursos comerciais.
+• Criar biblioteca de objeções.
+• Implementar role plays e reciclagens.
+
+6. Inteligência Comercial
+• Segmentar a base para ações de Cross Sell.
+• Definir critérios de priorização.
+• Mapear motivos de perda.
+• Identificar padrões de clientes que compram mais.
+• Transformar dados em novas estratégias comerciais.`
+      },
+      {
+                        id: 2,
+                        title: 'Posicionamento Atual e Visão de Futuro',
+                        category: 'Missão e Posicionamento',
+                        content: `A Microsistec é reconhecida no mercado imobiliário como uma empresa de tecnologia que oferece soluções para a gestão de imobiliárias, reunindo em uma única plataforma recursos para cadastro de imóveis, integração com portais, CRM, funil de atendimento, relatórios gerenciais e sites imobiliários.
+
+Apesar de possuir uma base consolidada de clientes e soluções completas, o posicionamento da marca ainda é fortemente associado ao sistema de gestão. Existe uma oportunidade de ampliar essa percepção, evidenciando a Microsistec como uma parceira estratégica para o crescimento das imobiliárias, e não apenas como fornecedora de software.
+
+No contexto comercial, há espaço para fortalecer a cultura de Cross Sell, demonstrando aos clientes como soluções complementares, como o Site V8 e o Albert, podem gerar mais resultados, produtividade e aumento das vendas.
+
+ONDE QUEREMOS CHEGAR
+
+Minha visão é posicionar a Microsistec como uma das principais referências em tecnologia para o mercado imobiliário brasileiro, reconhecida por impulsionar o crescimento das imobiliárias por meio de inovação, inteligência e eficiência operacional.
+
+Queremos que nossos clientes percebam a Microsistec como uma plataforma completa de crescimento, capaz de apoiar toda a jornada da imobiliária, desde a captação de imóveis e geração de leads até o atendimento, gestão comercial e tomada de decisão baseada em dados.`
+      },
+      {
+                        id: 3,
+                        title: 'Cardápio de Produtos',
+                        category: 'Produtos e Matriz',
+                        content: `CRM IMOBILIÁRIO
+O CRM Imobiliário é a plataforma central da Microsistec, desenvolvida para gerenciar a operação da imobiliária de forma integrada. Nele são concentrados o cadastro de imóveis, gestão de clientes, funil comercial, divulgação para portais, acompanhamento de atendimentos e relatórios gerenciais.
+
+Objetivo: Centralizar a operação da imobiliária em uma única plataforma, proporcionando mais organização, produtividade e controle sobre os processos comerciais.
+
+Principais benefícios:
+• Gestão completa da carteira de imóveis.
+• Integração com os principais portais imobiliários.
+• Controle do funil de vendas e locação.
+• Gestão de clientes e oportunidades.
+• Relatórios para tomada de decisão.
+• Redução de retrabalho e aumento da produtividade.
+
+---
+
+SITE INTEGRADO
+O Site Integrado é conectado diretamente ao CRM, garantindo que os imóveis cadastrados sejam atualizados automaticamente no site da imobiliária, sem necessidade de duplicidade de trabalho.
+
+Objetivo: Oferecer uma vitrine digital sempre atualizada, fortalecendo a presença online da imobiliária e facilitando a captação de novos clientes.
+
+Principais benefícios:
+• Atualização automática dos imóveis.
+• Integração total com o CRM.
+• Melhor experiência para o usuário.
+• Maior agilidade na divulgação dos imóveis.
+• Redução de erros e inconsistências nas informações.
+
+---
+
+APLICATIVO GERENCIADOR DE LEADS
+O aplicativo permite que corretores e gestores acompanhem e gerenciem os leads em tempo real, mesmo fora da imobiliária.
+
+Objetivo: Garantir agilidade no atendimento e acompanhamento das oportunidades, aumentando as chances de conversão.
+
+Principais benefícios:
+• Atendimento de qualquer lugar.
+• Notificações em tempo real.
+• Gestão prática dos leads.
+• Atualização rápida das negociações.
+• Maior mobilidade para a equipe comercial.
+
+---
+
+ALBERT | INTELIGÊNCIA ARTIFICIAL PARA ATENDIMENTO
+O Albert é a solução de Inteligência Artificial da Microsistec, desenvolvida para automatizar o atendimento inicial aos clientes, responder dúvidas, qualificar leads e agilizar o processo comercial.
+
+Objetivo: Aumentar a velocidade de atendimento, melhorar a experiência do cliente e potencializar a geração de oportunidades para a equipe comercial.
+
+Principais benefícios:
+• Atendimento automatizado 24 horas por dia.
+• Respostas rápidas.
+• Qualificação inicial dos leads.
+• Direcionamento inteligente para os corretores.
+• Redução do tempo de resposta.
+• Aumento da produtividade da equipe.
+• Atualizações automáticas de imóveis.
+• Disparo de mensagens.
+
+---
+
+SITE PERSONALIZADO V8
+O Site Personalizado V8 é a solução premium da Microsistec para imobiliárias que desejam fortalecer sua marca, aumentar sua presença digital e gerar mais negócios por meio da busca orgânica no Google.
+
+Objetivo: Transformar o site da imobiliária em um canal estratégico de captação de clientes e fortalecimento da marca.
+
+Principais benefícios:
+• Layout personalizado.
+• Projeto desenvolvido de acordo com a identidade visual da imobiliária.
+• Estrutura otimizada para SEO (Google).
+• Melhor desempenho e experiência de navegação.
+• Integração completa com o CRM.
+• Maior potencial para geração de leads próprios.
+• Fortalecimento da autoridade da marca no ambiente digital.`
+      },
+      {
+                        id: 4,
+                        title: 'Perfil Ideal de Cliente (ICP)',
+                        category: 'ICP e Perfil de Cliente',
+                        content: `A imobiliária ideal para a Microsistec apresenta as seguintes características:
+
+PORTE
+• Imobiliárias de pequeno e médio porte em crescimento.
+• Entre 5 e 50 colaboradores (ou equipe comercial estruturada).
+• Operação de vendas e/ou locação ativa.
+
+ESTRUTURA COMERCIAL
+• Possui corretores internos ou parceiros.
+• Recebe volume de no mínimo 100 leads/mês.
+• Necessita organizar e acompanhar o funil de atendimento.
+• Busca aumentar produtividade e conversão.
+
+MATURIDADE DIGITAL
+• Utiliza canais digitais para captação de clientes.
+• Investe em portais imobiliários.
+• Possui presença online e interesse em fortalecer a marca.
+• Está aberta à adoção de novas tecnologias.
+
+NECESSIDADES
+• Melhorar o atendimento aos leads.
+• Aumentar a velocidade de resposta.
+• Gerar mais oportunidades pelo site próprio.
+• Automatizar processos comerciais.
+• Tomar decisões baseadas em indicadores.
+
+---
+
+PERFIL COM MAIOR POTENCIAL DE CROSS SELL
+As melhores oportunidades para aumento de ticket médio costumam ser clientes que:
+• Já utilizam o CRM da Microsistec.
+• Possuem bom relacionamento com a base.
+• Estão em fase de crescimento.
+• Demonstra interesse em inovação.
+
+SINAIS DE OPORTUNIDADE
+
+Oportunidade para Albert:
+• Tempo elevado de resposta aos leads.
+• Reclamações sobre perda de oportunidades.
+• Atendimento concentrado em poucos colaboradores.
+• Alto volume de mensagens via WhatsApp.
+• Necessidade de atendimento fora do horário comercial.
+
+Oportunidade para Site V8:
+• Site antigo ou com baixa performance.
+• Pouca geração de leads orgânicos.
+• Dependência excessiva de portais imobiliários.
+• Interesse em fortalecer a marca.
+• Busca por melhor posicionamento no Google.`
+      },
+      {
+                        id: 5,
+                        title: 'Promessa de Valor e Essência',
+                        category: 'ICP e Perfil de Cliente',
+                        content: `PROMESSA DE VALOR
+Capacitar imobiliárias com tecnologia integrada para vender mais, atender melhor, operar com eficiência e crescer de forma sustentável.
+
+NOSSA ESSÊNCIA
+Transformamos tecnologia em resultados para o mercado imobiliário.`
+      },
+      {
+                        id: 6,
+                        title: 'Matriz de Produtos',
+                        category: 'Produtos e Matriz',
+                        content: `A matriz de produtos organiza as soluções da Microsistec de acordo com sua função na estratégia comercial, facilitando a identificação de oportunidades de aquisição, Cross Sell e Upsell.
+
+CORE - CRM IMOBILIÁRIO
+Objetivo: Solução principal que centraliza a gestão da imobiliária e serve como base para todo o ecossistema Microsistec.
+Momento de Oferta: Aquisição de novos clientes.
+
+CORE - SITE INTEGRADO
+Objetivo: Complementa o CRM, oferecendo uma vitrine digital integrada e atualizada automaticamente.
+Momento de Oferta: Comercializado junto ao CRM ou durante a implantação.
+
+CROSS SELL - ALBERT (IA DE ATENDIMENTO)
+Objetivo: Automatiza o atendimento, qualifica leads e aumenta a produtividade da equipe comercial.
+Momento de Oferta: Clientes que já utilizam o CRM e desejam melhorar o atendimento e a conversão de leads.
+
+CROSS SELL - SITE PERSONALIZADO V8
+Objetivo: Moderniza a presença digital da imobiliária, fortalece a marca e amplia a geração de leads orgânicos.
+Momento de Oferta: Clientes que já utilizam o CRM e buscam crescimento por meio do marketing digital e SEO.
+
+UPSELL - EVOLUÇÃO DE PLANO
+Objetivo: Expandir o uso da plataforma conforme o crescimento da imobiliária e suas novas necessidades.
+Momento de Oferta: Clientes com alta utilização da plataforma, crescimento da operação ou necessidade de funcionalidades avançadas.`
+      },
+      {
+                        id: 7,
+                        title: 'Processo Comercial - Atendimento 2.0 (Projeto CPR)',
+                        category: 'Processos Comerciais',
+                        content: `OBJETIVO
+Estruturar um processo comercial padronizado para atuação em clientes ativos da base Microsistec, com foco no aumento da receita recorrente (MRR) por meio da comercialização dos produtos Albert e Site Personalizado V8.
+
+PÚBLICO-ALVO
+Leads trabalhados: Clientes ativos da base Microsistec.
+São consideradas oportunidades de Cross Sell as imobiliárias que possuem potencial para contratação de soluções complementares, de acordo com os critérios definidos no ICP de Expansão.
+
+ESTRATÉGIA COMERCIAL
+A abordagem comercial deverá ser consultiva, identificando oportunidades de melhoria na operação da imobiliária antes da apresentação da solução.
+O foco da reunião é compreender o cenário atual do cliente e conectar suas necessidades aos benefícios do Albert e do Site Personalizado V8.
+
+FUNIL COMERCIAL | CLIENTES ATIVOS
+
+Potencial Cliente
+Cliente ativo identificado como elegível para oferta de novos produtos. Nesta etapa ocorre o primeiro contato e as tentativas de agendamento.
+
+Reunião Agendada
+Cliente qualificado e reunião confirmada com data e horário definidos.
+
+Reunião Realizada
+Realização do diagnóstico, levantamento de necessidades e apresentação da solução mais adequada.
+
+Em Negociação
+Cliente avaliando a proposta comercial, alinhando condições e tratando objeções.
+
+Aceite de Proposta
+Cliente formalizou o aceite da contratação por e-mail.
+
+Aguardando Pagamento
+Aguardando confirmação do pagamento após envio do boleto e comprovante pelo cliente.
+
+FERRAMENTA UTILIZADA
+CRM: Pipedrive
+Todo o processo comercial deverá ser registrado no Pipedrive, garantindo rastreabilidade das negociações, acompanhamento dos indicadores e previsibilidade da operação.
+
+REGRAS OPERACIONAIS
+
+Etapa: Potencial Cliente
+Tempo máximo de permanência: 3 dias corridos.
+Caso não haja evolução para a etapa Reunião Agendada, a oportunidade será considerada encerrada e removida do funil.
+
+Critério para descarte:
+• Não responder às tentativas de contato.
+• Não demonstrar interesse na reunião.
+• Permanecer mais de 3 dias sem avanço no funil.
+
+Antes do descarte, deverá ser executada a automação de encerramento.
+Automação: Envio do e-mail "Tentei falar com você", informando o encerramento da tentativa de contato e mantendo o canal aberto para futuras oportunidades.
+
+GATILHO PARA AVANÇO DE ETAPA
+Potencial Cliente → Reunião Agendada
+A oportunidade somente deverá avançar quando houver:
+• Data definida.
+• Horário confirmado.
+• Participantes alinhados.
+• Evento criado na agenda.
+
+PADRONIZAÇÃO DA AGENDA
+Todas as reuniões deverão seguir o padrão:
+Nome do evento: [Conferência Web
+        ] Microsistec & Cliente | Como otimizar sua operação
+
+Esta padronização permite:
+• Mensurar o volume mensal de reuniões realizadas.
+• Acompanhar a taxa de conversão entre reuniões e vendas.
+• Facilitar auditorias e análises de produtividade.
+• Padronizar a experiência do cliente.
+
+INDICADORES DO PROCESSO
+• Clientes abordados.
+• Taxa de contato.
+• Reuniões agendadas.
+• Show Rate.
+• Reuniões realizadas.
+• Conversão por etapa do funil.
+• Vendas de Albert.
+• Vendas de Site V8.
+• MRR gerado por Cross Sell.
+• Tempo médio de negociação.
+• Taxa de descarte na etapa Potencial Cliente.`
+      },
+      {
+                        id: 8,
+                        title: 'Processo Comercial - Inbound',
+                        category: 'Processos Comerciais',
+                        content: `OBJETIVO
+Estruturar um processo comercial padronizado para atendimento de leads gerados por canais de Inbound Marketing, garantindo agilidade no primeiro contato, qualificação das oportunidades e aumento das taxas de conversão em vendas.
+
+PÚBLICO-ALVO
+Leads trabalhados: Novos leads gerados por canais de marketing.
+Origem dos leads:
+• Site Microsistec
+• Landing Pages
+• Formulários
+• Campanhas de Marketing
+• Google
+• Redes Sociais
+• Indicações
+• Eventos e Feiras
+• WhatsApp
+
+ESTRATÉGIA COMERCIAL
+O atendimento deverá ocorrer com agilidade e foco na compreensão do cenário da imobiliária.
+A abordagem comercial será consultiva, buscando identificar desafios, necessidades e objetivos do cliente antes da demonstração da plataforma.
+
+FUNIL COMERCIAL | LEADS INBOUND
+
+Lead Recebido
+Novo lead capturado pelos canais de marketing e registrado automaticamente no CRM.
+
+Primeiro Contato
+Realizar a primeira tentativa de contato para validar interesse e iniciar a qualificação.
+
+Lead Qualificado
+Confirmar aderência ao ICP, entender o cenário da imobiliária e identificar potencial de negócio.
+
+Reunião Agendada
+Cliente qualificado com reunião confirmada, data e horário definidos.
+
+Reunião Realizada
+Diagnóstico da operação, demonstração da plataforma e apresentação da proposta de valor.
+
+Em Negociação
+Cliente avaliando proposta comercial, condições e tratativas de objeções.
+
+Proposta Enviada
+Proposta comercial formal enviada ao cliente para análise.
+
+Venda Ganha
+Contrato fechado e encaminhado para implantação.
+
+Venda Perdida
+Oportunidade encerrada, registrando obrigatoriamente o motivo da perda.
+
+FERRAMENTA UTILIZADA
+CRM: Pipedrive
+Todas as interações, atividades, contatos e movimentações deverão ser registradas no CRM.
+
+REGRAS OPERACIONAIS
+
+Etapa: Lead Recebido
+SLA de atendimento: Todo novo lead deverá receber a primeira tentativa de contato em até 15 minutos durante o horário comercial.
+Caso o contato ocorra fora do expediente, deverá ser realizado no primeiro horário útil seguinte.
+
+Primeiro Contato
+Realizar múltiplas tentativas utilizando diferentes canais de comunicação:
+• Ligação
+• WhatsApp
+• E-mail
+
+Caso não haja retorno após o fluxo de tentativas definido, a oportunidade será encerrada como Lead Não Responsivo, mantendo o histórico para futuras ações de marketing.
+
+Lead Qualificado
+Antes do agendamento da demonstração, validar:
+• Perfil da imobiliária.
+• Quantidade aproximada de imóveis.
+• Número de usuários.
+• Sistema utilizado atualmente.
+• Principais desafios.
+• Interesse em troca de plataforma.
+• Momento da decisão.
+
+GATILHOS PARA AVANÇO DE ETAPA
+
+Lead Recebido → Primeiro Contato
+Lead registrado automaticamente no CRM.
+
+Primeiro Contato → Lead Qualificado
+Contato realizado com sucesso.
+Interesse confirmado.
+
+Lead Qualificado → Reunião Agendada
+Perfil aderente ao ICP.
+Cliente demonstrou interesse na apresentação.
+Data e horário definidos.
+
+Reunião Agendada → Reunião Realizada
+Reunião realizada conforme agenda.
+
+Reunião Realizada → Em Negociação
+Cliente demonstrou interesse na contratação.
+Próximos passos definidos.
+
+Em Negociação → Proposta Enviada
+Proposta comercial enviada.
+
+Proposta Enviada → Venda Ganha
+Cliente aprovou a proposta.
+Contratação formalizada.
+
+PADRONIZAÇÃO DA AGENDA
+Todas as demonstrações deverão seguir o padrão:
+Nome do evento: [Conferência Web
+        ] Microsistec & Nome da Imobiliária | Apresentação da Plataforma
+
+Esta padronização permite:
+• Mensurar reuniões realizadas.
+• Avaliar taxa de comparecimento (Show Rate).
+• Medir conversão por vendedor.
+• Padronizar a experiência do cliente.
+
+INDICADORES DO PROCESSO
+• Leads recebidos.
+• Tempo médio de primeiro atendimento.
+• Taxa de contato.
+• Taxa de qualificação.
+• Reuniões agendadas.
+• Show Rate.
+• Conversão de reuniões em propostas.
+• Conversão de propostas em vendas.
+• Tempo médio do ciclo de vendas.
+• Ticket médio.
+• Receita gerada.
+• Motivos de perda.
+• Conversão por origem do lead.`
+      }
+    ];
+  }
+};
+
+        // ============================================
+// SISTEMA DE AUTENTICAÇÃO
+// ============================================
+        const Auth = {
+            login(email, password) {
+                const users = DB.getUsers();
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    DB.setCurrentUser(user);
+                    return { success: true, user
+      };
+    }
+                return { success: false, message: 'E-mail ou senha incorretos'
+    };
+  },
+            logout() {
+                DB.logout();
+                Router.navigate('login');
+  },
+            isAdmin() {
+                const user = DB.getCurrentUser();
+                return user && user.role === 'admin';
+  }
+};
+
+        // ============================================
+// ROTEADOR
+// ============================================
+        const Router = {
+            currentPage: 'login',
+            navigate(page, params = {}) {
+                this.currentPage = page;
+                this.params = params;
+                this.render();
+  },
+            render() {
+                const app = document.getElementById('app');
+                const user = DB.getCurrentUser();
+                
+                if (!user && this.currentPage !== 'login') {
+                    this.currentPage = 'login';
+    }
+
+                switch (this.currentPage) {
+                    case 'login':
+                        app.innerHTML = Pages.login();
+                        break;
+                    case 'home':
+                        app.innerHTML = Pages.home();
+                        break;
+                    case 'content':
+                        app.innerHTML = Pages.content(this.params.id);
+                        break;
+                    case 'admin':
+                        app.innerHTML = Pages.admin();
+                        break;
+                    case 'search':
+                        app.innerHTML = Pages.search(this.params.query);
+                        break;
+    }
+  }
+};
+
+        // ============================================
+// PÁGINAS
+// ============================================
+        const Pages = {
+            login() {
+                return `
+                    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-primary to-blue-900 p-4">
+                        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md fade-in">
+                            <div class="text-center mb-8">
+                                <div class="w-16 h-16 bg-brand-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-brand-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                    </svg>
+                                </div>
+                                <h1 class="text-2xl font-bold text-brand-primary">Biblioteca Comercial</h1>
+                                <p class="text-gray-500 text-sm mt-2">Microsistec</p>
+                            </div>
+                            <form onsubmit="handleLogin(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
+                                    <input type="email" id="loginEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-transparent" placeholder="seu@email.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                                    <input type="password" id="loginPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-transparent" placeholder="••••••••">
+                                </div>
+                                <div id="loginError" class="text-red-500 text-sm hidden"></div>
+                                <button type="submit" class="w-full bg-brand-primary text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition">
+                                    Entrar
+                                </button>
+                            </form>
+                            <div class="mt-6 text-center text-xs text-gray-500">
+                                <p><strong>Admin:</strong> cami@microsistec.com / admin123</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+  },
+
+            home() {
+                const contents = DB.getContents();
+                const categories = [...new Set(contents.map(c => c.category))
+    ];
+                const user = DB.getCurrentUser();
+
+                return `
+                    <div class="min-h-screen bg-brand-bg">
+                        ${this.header()
+    }
+                        
+                        <div class="max-w-6xl mx-auto px-6 py-12">
+                            <div class="mb-8">
+                                <h2 class="text-3xl font-bold text-brand-primary mb-2">Olá, ${user.name
+    }! 👋</h2>
+                                <p class="text-gray-600 text-lg">Acesse todo o conhecimento comercial da Microsistec em um só lugar.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                ${categories.map(cat => {
+                                    const catContents = contents.filter(c => c.category === cat);
+                                    const icons = {
+                                        'Missão e Posicionamento': '🎯',
+                                        'Produtos e Matriz': '📦',
+                                        'ICP e Perfil de Cliente': '👥',
+                                        'Processos Comerciais': '⚙️'
+        };
+                                    return `
+                                        <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-brand-secondary cursor-pointer" onclick="showCategory('${cat}')">
+                                            <div class="text-4xl mb-4">${icons[cat
+          ] || '📄'
+        }</div>
+                                            <h3 class="font-bold text-lg text-brand-primary mb-2">${cat
+        }</h3>
+                                            <p class="text-sm text-gray-500">${catContents.length
+        } documento${catContents.length > 1 ? 's' : ''
+        }</p>
+                                        </div>
+                                    `;
+      }).join('')
+    }
+                            </div>
+
+                            <div class="mt-12">
+                                <h3 class="text-xl font-bold text-brand-primary mb-4">Todos os Documentos</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    ${contents.map(c => `
+                                        <div onclick="Router.navigate('content', {id: ${c.id}})" class="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 hover:border-brand-secondary">
+                                            <h4 class="font-semibold text-brand-primary mb-1">${c.title
+      }</h4>
+                                            <p class="text-xs text-gray-500">${c.category
+      }</p>
+                                        </div>
+                                    `).join('')
+    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+  },
+
+            content(id) {
+                const contents = DB.getContents();
+                const content = contents.find(c => c.id === id);
+                if (!content) return '<div class="p-8">Conteúdo não encontrado</div>';
+
+                return `
+                    <div class="min-h-screen bg-brand-bg">
+                        ${this.header()
+    }
+                        
+                        <div class="max-w-4xl mx-auto px-6 py-12">
+                            <button onclick="Router.navigate('home')" class="mb-6 text-brand-secondary hover:underline flex items-center gap-2">
+                                ← Voltar para biblioteca
+                            </button>
+                            
+                            <div class="bg-white rounded-xl shadow-sm p-8">
+                                <div class="mb-6">
+                                    <span class="text-xs font-semibold text-brand-secondary bg-blue-50 px-3 py-1 rounded-full">${content.category
+    }</span>
+                                </div>
+                                <h1 class="text-3xl font-bold text-brand-primary mb-6">${content.title
+    }</h1>
+                                <div class="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-line">
+                                    ${content.content
+    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+  },
+
+            admin() {
+                if (!Auth.isAdmin()) {
+                    return '<div class="p-8 text-center text-red-500">Acesso negado</div>';
+    }
+
+                return `
+                    <div class="min-h-screen bg-gray-50">
+                        ${this.header()
+    }
+                        
+                        <div class="max-w-6xl mx-auto px-6 py-8">
+                            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                                <aside class="lg:col-span-1">
+                                    <div class="bg-white rounded-xl shadow-sm p-6">
+                                        <h3 class="font-bold text-brand-primary mb-4">Painel Admin</h3>
+                                        <nav class="space-y-2">
+                                            <button onclick="showAdminTab('content')" class="w-full text-left p-3 rounded-lg hover:bg-gray-50 flex items-center gap-2 text-sm">
+                                                📄 Gerenciar Conteúdos
+                                            </button>
+                                            <button onclick="showAdminTab('users')" class="w-full text-left p-3 rounded-lg hover:bg-gray-50 flex items-center gap-2 text-sm">
+                                                👥 Gerenciar Usuários
+                                            </button>
+                                        </nav>
+                                    </div>
+                                </aside>
+
+                                <main class="lg:col-span-3">
+                                    <div id="adminContent">
+                                        ${this.adminContentManager()
+    }
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+                    </div>
+                `;
+  },
+
+            adminContentManager() {
+                const contents = DB.getContents();
+                return `
+                    <div class="bg-white rounded-xl shadow-sm p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-brand-primary">Gerenciar Conteúdos</h3>
+                            <button onclick="showAddContentModal()" class="bg-brand-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition flex items-center gap-2">
+                                + Novo Conteúdo
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            ${contents.map(c => `
+                                <div class="border border-gray-200 rounded-lg p-4 hover:border-brand-secondary transition">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <h4 class="font-semibold text-brand-primary">${c.title
+      }</h4>
+                                            <p class="text-xs text-gray-500 mt-1">${c.category
+      }</p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button onclick="editContent(${c.id})" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
+                                            <button onclick="deleteContent(${c.id})" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')
+    }
+                        </div>
+                    </div>
+                `;
+  },
+
+            adminUserManager() {
+                const users = DB.getUsers();
+                return `
+                    <div class="bg-white rounded-xl shadow-sm p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-brand-primary">Gerenciar Usuários</h3>
+                            <button onclick="showAddUserModal()" class="bg-brand-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition flex items-center gap-2">
+                                + Novo Usuário
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            ${users.map(u => `
+                                <div class="border border-gray-200 rounded-lg p-4 hover:border-brand-secondary transition">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-semibold text-brand-primary">${u.name || u.email
+      }</p>
+                                            <p class="text-sm text-gray-500">${u.email
+      }</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-xs font-bold px-3 py-1 rounded-full ${u.role === 'admin' ? 'bg-brand-accent text-white' : 'bg-gray-200 text-gray-700'}">
+                                                ${u.role === 'admin' ? 'Admin' : 'Visualizador'
+      }
+                                            </span>
+                                            ${u.email !== 'cami@microsistec.com' ? `
+                                                <button onclick="deleteUser('${u.email}')" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
+                                            ` : ''
+      }
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')
+    }
+                        </div>
+                    </div>
+                `;
+  },
+
+            search(query) {
+                const contents = DB.getContents();
+                const results = contents.filter(c => 
+                    c.title.toLowerCase().includes(query.toLowerCase()) ||
+                    c.content.toLowerCase().includes(query.toLowerCase()) ||
+                    c.category.toLowerCase().includes(query.toLowerCase())
+                );
+
+                return `
+                    <div class="min-h-screen bg-brand-bg">
+                        ${this.header()
+    }
+                        
+                        <div class="max-w-4xl mx-auto px-6 py-12">
+                            <button onclick="Router.navigate('home')" class="mb-6 text-brand-secondary hover:underline flex items-center gap-2">
+                                ← Voltar para biblioteca
+                            </button>
+                            
+                            <h2 class="text-2xl font-bold text-brand-primary mb-2">Resultados da Busca</h2>
+                            <p class="text-gray-600 mb-6">${results.length
+    } resultado${results.length !== 1 ? 's' : ''
+    } para "${query}"</p>
+                            
+                            <div class="space-y-4">
+                                ${results.length > 0 ? results.map(c => `
+                                    <div onclick="Router.navigate('content', {id: ${c.id}})" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 hover:border-brand-secondary">
+                                        <h3 class="font-semibold text-brand-primary mb-2">${c.title
+      }</h3>
+                                        <p class="text-xs text-gray-500 mb-2">${c.category
+      }</p>
+                                        <p class="text-sm text-gray-600 line-clamp-2">${c.content.substring(0,
+        150)
+      }...</p>
+                                    </div>
+                                `).join('') : '<p class="text-gray-500">Nenhum resultado encontrado.</p>'
+    }
+                            </div>
+                        </div>
+                    </div>
+                `;
+  },
+
+            header() {
+                const user = DB.getCurrentUser();
+                return `
+                    <header class="bg-brand-primary text-white shadow-lg">
+                        <div class="max-w-6xl mx-auto px-6 py-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-3 cursor-pointer" onclick="Router.navigate('home')">
+                                    <svg class="w-8 h-8 text-brand-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                    </svg>
+                                    <h1 class="text-xl font-bold">Biblioteca Comercial</h1>
+                                </div>
+                                
+                                <div class="flex items-center gap-4">
+                                    <div class="relative">
+                                        <input 
+                                            type="text" 
+                                            id="searchInput"
+                                            placeholder="Buscar..." 
+                                            onkeypress="if(event.key === 'Enter') performSearch()"
+                                            class="pl-10 pr-4 py-2 rounded-lg bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-secondary w-64"
+                                        >
+                                        <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </div>
+                                    
+                                    ${Auth.isAdmin() ? `
+                                        <button onclick="Router.navigate('admin')" class="bg-brand-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition text-sm">
+                                            Admin
+                                        </button>
+                                    ` : ''
+    }
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm">${user.name
+    }</span>
+                                        <button onclick="Auth.logout()" class="text-sm text-gray-300 hover:text-white">
+                                            Sair
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                `;
+  }
+};
+
+        // ============================================
+// FUNÇÕES GLOBAIS
+// ============================================
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const result = Auth.login(email, password);
+            
+            if (result.success) {
+                Router.navigate('home');
+  } else {
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.textContent = result.message;
+                errorDiv.classList.remove('hidden');
+  }
+}
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query.trim()) {
+                Router.navigate('search',
+    { query
+    });
+  }
+}
+
+        function showCategory(category) {
+            const contents = DB.getContents().filter(c => c.category === category);
+            // Por enquanto, vamos apenas mostrar o primeiro conteúdo da categoria
+            if (contents.length > 0) {
+                Router.navigate('content',
+    { id: contents[
+        0
+      ].id
+    });
+  }
+}
+
+        function showAdminTab(tab) {
+            const adminContent = document.getElementById('adminContent');
+            if (tab === 'content') {
+                adminContent.innerHTML = Pages.adminContentManager();
+  } else if (tab === 'users') {
+                adminContent.innerHTML = Pages.adminUserManager();
+  }
+}
+
+        function showAddContentModal() {
+            const title = prompt('Título do conteúdo:');
+            if (!title) return;
+            
+            const category = prompt('Categoria (Missão e Posicionamento, Produtos e Matriz, ICP e Perfil de Cliente, Processos Comerciais):');
+            if (!category) return;
+            
+            const content = prompt('Conteúdo (cole o texto completo):');
+            if (!content) return;
+
+            const contents = DB.getContents();
+            const newId = Math.max(...contents.map(c => c.id),
+  0) + 1;
+            contents.push({ id: newId, title, category, content
+  });
+            DB.saveContents(contents);
+            
+            showAdminTab('content');
+            alert('Conteúdo adicionado com sucesso!');
+}
+
+        function editContent(id) {
+            const contents = DB.getContents();
+            const content = contents.find(c => c.id === id);
+            
+            const newTitle = prompt('Novo título:', content.title);
+            if (!newTitle) return;
+            
+            const newCategory = prompt('Nova categoria:', content.category);
+            if (!newCategory) return;
+            
+            const newContent = prompt('Novo conteúdo:', content.content);
+            if (!newContent) return;
+
+            content.title = newTitle;
+            content.category = newCategory;
+            content.content = newContent;
+            DB.saveContents(contents);
+            
+            showAdminTab('content');
+            alert('Conteúdo atualizado com sucesso!');
+}
+
+        function deleteContent(id) {
+            if (!confirm('Tem certeza que deseja excluir este conteúdo?')) return;
+            
+            const contents = DB.getContents();
+            const filtered = contents.filter(c => c.id !== id);
+            DB.saveContents(filtered);
+            
+            showAdminTab('content');
+            alert('Conteúdo excluído com sucesso!');
+}
+
+        function showAddUserModal() {
+            const name = prompt('Nome do usuário:');
+            if (!name) return;
+            
+            const email = prompt('E-mail do usuário:');
+            if (!email) return;
+            
+            const password = prompt('Senha inicial:');
+            if (!password) return;
+            
+            const role = prompt('Nível de acesso (admin ou viewer):', 'viewer');
+            if (!role) return;
+
+            const users = DB.getUsers();
+            if (users.find(u => u.email === email)) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+  }
+
+            users.push({ name, email, password, role
+  });
+            DB.saveUsers(users);
+            
+            showAdminTab('users');
+            alert('Usuário criado com sucesso!');
+}
+
+        function deleteUser(email) {
+            if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+            
+            const users = DB.getUsers();
+            const filtered = users.filter(u => u.email !== email);
+            DB.saveUsers(filtered);
+            
+            showAdminTab('users');
+            alert('Usuário excluído com sucesso!');
+}
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+        DB.init();
+        Router.render();
+    </script>
+</body>
+</html>
