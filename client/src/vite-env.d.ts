@@ -8,3 +8,9 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// Declaracao de módulo fallback para o editor quando node_modules nao estiver instalado localmente
+declare module "@supabase/supabase-js" {
+  export function createClient(supabaseUrl: string, supabaseKey: string, options?: any): any;
+  export type SupabaseClient = any;
+}
