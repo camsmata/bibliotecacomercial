@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblioteca Comercial - Microsistec</title>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
     <style>
         /* Paleta de cores baseada no SVG */
@@ -780,17 +783,58 @@
             renderContent(allContent);
         }
 
-        function login(username, password) {
-            const user = allUsers.find(u => u.username === username && u.password === password);
-            if (user && user.role === 'admin') {
+        // --- Configurações do Supabase ---
+        const SUPABASE_URL = window.SUPABASE_URL || 'https://seu-projeto.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = window.SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_xVtfNKG1_Z5SAftl_0Zq2w_fOmI5WXu';
+
+        let supabaseClient = null;
+        if (typeof supabase !== 'undefined' && supabase.createClient) {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        }
+
+        async function login(username, password) {
+            const loginErrorEl = document.getElementById('loginError');
+            if (loginErrorEl) loginErrorEl.style.display = 'none';
+
+            // Tenta autenticar via Supabase se a URL do projeto estiver configurada
+            if (supabaseClient && SUPABASE_URL !== 'https://seu-projeto.supabase.co') {
+                try {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
+                        email: username,
+                        password: password
+                    });
+
+                    if (error) {
+                        if (loginErrorEl) {
+                            loginErrorEl.innerText = error.message || 'Usuário ou senha incorretos.';
+                            loginErrorEl.style.display = 'block';
+                        }
+                        return false;
+                    } else {
+                        hideLoginModal();
+                        showAdminPanel();
+                        return true;
+                    }
+                } catch (err) {
+                    console.error('Erro ao conectar ao Supabase:', err);
+                }
+            }
+
+            // Fallback para usuários locais
+            const user = allUsers.find(u => (u.username === username || u.email === username) && u.password === password);
+            if (user && (user.role === 'admin' || user.role === 'comercial')) {
                 hideLoginModal();
                 showAdminPanel();
                 return true;
             } else {
-                document.getElementById('loginError').style.display = 'block';
+                if (loginErrorEl) {
+                    loginErrorEl.innerText = 'Usuário ou senha incorretos.';
+                    loginErrorEl.style.display = 'block';
+                }
                 return false;
             }
         }
+
 
         function logout() {
             hideAdminPanel();
@@ -958,10 +1002,10 @@
         document.getElementById('logoutBtn').addEventListener('click', logout);
         document.querySelector('#loginModal .close-modal').addEventListener('click', hideLoginModal);
         document.querySelector('#adminPanel .close-modal').addEventListener('click', hideAdminPanel);
-        document.getElementById('doLoginBtn').addEventListener('click', () => {
+        document.getElementById('doLoginBtn').addEventListener('click', async () => {
             const user = document.getElementById('adminUser').value;
             const pass = document.getElementById('adminPass').value;
-            login(user, pass);
+            await login(user, pass);
         });
         document.getElementById('showAddContentBtn').addEventListener('click', showAddContentForm);
         document.getElementById('showManageUsersBtn').addEventListener('click', showManageUsersForm);
